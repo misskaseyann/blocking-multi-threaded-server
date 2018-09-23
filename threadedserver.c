@@ -5,7 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_THREADS 10
+/* 
+ * NOTE:
+ * This server only supports a MAX number of threads.
+ * If the number of threads exceeds MAX at once (worst case scenario)
+ * then unpredictable behavior may occur.
+ * Adjust the MAX value based on the use case.
+ */
+#define MAX_THREADS 30
 
 /*
  * Lab Assignment 4
@@ -19,7 +26,6 @@
 void* fileget(void* arg);
 
 int main() {
-	// multiple threads? not sure if best practice or not...
 	pthread_t threads[MAX_THREADS];
 	int status;
 	char input[256];
