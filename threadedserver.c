@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 
 /* 
  * NOTE:
@@ -13,6 +14,8 @@
  * Adjust the MAX value based on the use case.
  */
 #define MAX_THREADS 30
+
+int numFiles = 0; //keeps count of files dealt with
 
 /*
  * Lab Assignment 4
@@ -24,6 +27,7 @@
  */
 
 void* fileget(void* arg);
+void sigUsrHandler(int signNum);
 
 int main() {
 	pthread_t threads[MAX_THREADS];
@@ -31,6 +35,8 @@ int main() {
 	char input[256];
 	char* inputstr = input;
 	int counter = 0; // count spot in threads
+
+	signal(SIGINT, sigUsrHandler); //creating SIGINT for termination
 	
 	// infinite loop?
 	while(1) {
@@ -56,8 +62,22 @@ void* fileget(void* arg) {
 	// generate 80/20 probability for sleep time
 	float ran = (float)rand()/RAND_MAX;
 	ran <= 0.8 ? sleep(1) : sleep((7 + rand() % (10 + 1 - 7)));
+
+	numFiles = numFiles + 1;
+
 	// print diagnostic message.. probably can change so something more "official" later
-	printf("Thread got the string: %s and Random num: %f\n", str, ran);
+	printf("\nThread got the string: %s\n", str);
+	
 	free(str);
 	return NULL;
+}
+
+void sigUsrHandler(int signNum) { 
+	//terminates when control c recieved
+	if (signNum == SIGINT){
+		printf("Control-c registered.\n");
+		printf("Number of file requests recieved/serviced: %d\n", numFiles);
+		printf("Exiting...\n");
+		exit(0);
+	}
 }
