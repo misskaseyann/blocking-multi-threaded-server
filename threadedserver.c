@@ -46,19 +46,19 @@ int main() {
 		scanf("%s", inputstr);
 
 			// create worker thread
-			if ((status = pthread_create(&threads[counter], NULL, fileget, (void*)inputstr)) != 0) {
-				fprintf(stderr, "thread create error %d: %s\n", status, strerror(status));
-				exit(1);
-			}
+		if ((status = pthread_create(&threads[counter], NULL, fileget, (void*)inputstr)) != 0) {
+			fprintf(stderr, "thread create error %d: %s\n", status, strerror(status));
+			exit(1);
+		}
 
 		// detach the child to execute independently until termination
-			if ((status = pthread_detach (threads[counter])) != 0) {
-				fprintf(stderr, "thread detach error %d: %s\n", status, strerror(status));
-				exit(1);
-			}
+		if ((status = pthread_detach (threads[counter])) != 0) {
+			fprintf(stderr, "thread detach error %d: %s\n", status, strerror(status));
+			exit(1);
+		}
 
 		// update counter
-			counter < MAX_THREADS ? (counter++) : (counter = 0);		
+		counter < MAX_THREADS ? (counter++) : (counter = 0);		
 	}
 	return 0;
 
